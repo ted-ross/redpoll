@@ -28,7 +28,7 @@ class Example(object):
     def __init__(self, conn):
         self.conn         = conn
         self.link         = Sender(self.conn, DEST, delivery_mode=SENDER_REQUIRE_ACK)
-        self.cv           = Condition
+        self.cv           = Condition()
         self.accept_count = 0
         self.reject_count = 0
         self.outstanding  = 0
