@@ -28,7 +28,7 @@ BODY = {'first':445, 'second':'string value'}
 ## (ANONYMOUS authentication, etc.).
 ##
 conn = Connection(HOST)
-conn.open()
+conn.start()
 
 ##
 ## Create a sender-link to the destination target on the connected container.

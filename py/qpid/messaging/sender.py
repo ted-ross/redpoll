@@ -26,22 +26,22 @@ class SendHandler(object):
     """
     """
 
-    def onAccept(self, receiver, msg):
+    def on_accept(self, receiver, msg):
         """
         """
         pass
 
-    def onReject(self, receiver, msg, reason):
+    def on_reject(self, receiver, msg, reason):
         """
         """
         pass
 
-    def onRelease(self, receiver, msg):
+    def on_release(self, receiver, msg):
         """
         """
         pass
 
-    def onSettle(self, receiver, msg):
+    def on_settle(self, receiver, msg):
         """
         """
         pass

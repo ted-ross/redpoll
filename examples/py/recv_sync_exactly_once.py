@@ -27,7 +27,7 @@ DEST = "destination"
 ## (ANONYMOUS authentication, etc.).
 ##
 conn = Connection(HOST)
-conn.open()
+conn.start()
 
 ##
 ## Create a receiver-link from the destination source on the connected container.

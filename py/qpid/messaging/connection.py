@@ -22,12 +22,12 @@ class ConnectionHandler(object):
     """
     """
 
-    def onClose(self, reason):
+    def on_close(self, reason):
         """
         """
         pass
 
-    def onFail(self, reason, permanent):
+    def on_fail(self, reason, permanent):
         """
         """
         pass
@@ -37,17 +37,27 @@ class Connection(object):
     """
     """
 
-    def __init__(self, hostport, handler=None, transport=None):
+    def __init__(self, hostport_or_transport, handler=None):
         """
         """
         pass
 
-    def open(self):
+    def start(self):
+        """
+        """
+        pass
+
+    def run(self):
         """
         """
         pass
 
     def close(self, force_timeout=10):
+        """
+        """
+        pass
+
+    def reconnect(self):
         """
         """
         pass
