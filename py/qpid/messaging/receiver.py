@@ -63,22 +63,17 @@ class Receiver(object):
         """
         pass
 
-    def accept(self, msg):
+    def accept(self, msg, transaction=None):
         """
         """
         pass
 
-    def reject(self, msg):
+    def reject(self, msg, transaction=None):
         """
         """
         pass
 
-    def release(self, msg):
-        """
-        """
-        pass
-
-    def settle(self, msg):
+    def settle(self, msg, transaction=None):
         """
         """
         pass

@@ -17,21 +17,35 @@
 # under the License.
 #
 
-class Transaction(object):
-    """
-    """
+from qpid.messaging import Connection, Sender, Message
 
-    def __init__(self, conn_or_sess):
-        """
-        """
-        pass
+HOST = "localhost:5672"
+DEST = "destination"
 
-    def commit(self):
-        """
-        """
-        pass
+##
+## Create and open a connection to the host using default settings
+## (ANONYMOUS authentication, etc.).
+##
+conn = Connection(HOST)
+conn.open()
 
-    def rollback(self):
-        """
-        """
-        pass
+##
+## Create a sender-link to the destination target on the connected container.
+##
+link = Sender(conn, DEST)
+
+##
+## Create a message with some content.
+##
+msg  = Message("Content")
+
+##
+## Send the message pre-settled, blocking until the message leaves the process.
+##
+link.send(msg)
+
+##
+## Close the connection and everything associated with it.
+##
+conn.close()
+
