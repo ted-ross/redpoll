@@ -17,3 +17,27 @@
 # under the License.
 #
 
+class SessionHandler(object):
+    """
+    """
+
+    def onClose(self, reason):
+        """
+        """
+        pass
+
+
+class Session(object):
+    """
+    """
+
+    def __init__(self, conn, handler=None, capacity_bytes=1000000):
+        """
+        """
+        pass
+
+    def set_incoming_capacity(self, capacity_bytes):
+        """
+        """
+        pass
+

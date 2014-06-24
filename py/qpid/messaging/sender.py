@@ -17,3 +17,56 @@
 # under the License.
 #
 
+
+SENDER_PRESETTLED  = 1
+SENDER_REQUIRE_ACK = 2
+
+
+class SendHandler(object):
+    """
+    """
+
+    def onAccept(self, receiver, msg):
+        """
+        """
+        pass
+
+    def onReject(self, receiver, msg, reason):
+        """
+        """
+        pass
+
+    def onRelease(self, receiver, msg):
+        """
+        """
+        pass
+
+    def onSettle(self, receiver, msg):
+        """
+        """
+        pass
+
+
+class Sender(object):
+    """
+    """
+
+    def __init__(self, conn_or_sess, target, source=None, delivery_mode=SENDER_PRESETTLED, link_recovery=False, compression=None):
+        """
+        """
+        pass
+
+    def close(self):
+        """
+        """
+        pass
+
+    def send(self, msg, handler=None):
+        """
+        """
+        pass
+
+    def drained(self):
+        """
+        """
+        pass

@@ -17,3 +17,22 @@
 # under the License.
 #
 
+class Transport(object):
+    """
+    """
+
+    def set_connection(self, conn):
+        """
+        """
+        pass
+
+    def read(self, buf, maxlen):
+        """
+        """
+        pass
+
+    def write(self, buf, buflen):
+        """
+        """
+        pass
+

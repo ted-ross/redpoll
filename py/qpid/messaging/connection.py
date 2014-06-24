@@ -77,21 +77,6 @@ class Connection(object):
         """
         pass
 
-    def session(self):
-        """
-        """
-        pass
-
-    def sender(self, addr=None, delivery_mode=SENDER_PRESETTLED, link_recovery=False, compression=None):
-        """
-        """
-        pass
-
-    def receiver(self, addr, delivery_mode=RECEIVER_AUTO_ACK, link_recovery=False, initial_credit=10, selector=None):
-        """
-        """
-        pass
-
     def xport_read_ready(self):
         """
         """
