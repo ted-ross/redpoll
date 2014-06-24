@@ -17,7 +17,7 @@
 # under the License.
 #
 
-from qpid.messaging import Connection, Sender, Message
+from qpid.messaging import Connection, Receiver
 
 HOST = "localhost:5672"
 DEST = "destination"
@@ -30,19 +30,17 @@ conn = Connection(HOST)
 conn.open()
 
 ##
-## Create a sender-link to the destination target on the connected container.
+## Create a receiver-link from the destination source on the connected container.
+## The link defaults to AUTO_ACCEPT mode and MOVE (consume) distribution.
 ##
-link = Sender(conn, DEST)
+link = Receiver(conn, DEST)
 
 ##
-## Create a message with some content.
+## Receive a message, blocking until the message arrives.  The message is automatically
+## accepted and settled by the library.
 ##
-msg  = Message("Content")
-
-##
-## Send the message pre-settled, blocking until the message leaves the process.
-##
-link.send(msg)
+msg = link.recv()
+print msg.body
 
 ##
 ## Close the connection and everything associated with it.
