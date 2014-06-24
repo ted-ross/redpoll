@@ -47,7 +47,7 @@ class Connection(object):
         """
         pass
 
-    def close(self):
+    def close(self, force_timeout=10):
         """
         """
         pass

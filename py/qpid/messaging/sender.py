@@ -61,7 +61,7 @@ class Sender(object):
         """
         pass
 
-    def send(self, msg, handler=None, transaction=None):
+    def send(self, msg, handler=None, transaction=None, timeout=None):
         """
         """
         pass
