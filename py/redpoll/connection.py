@@ -22,12 +22,12 @@ class ConnectionHandler(object):
     """
     """
 
-    def on_close(self, reason):
+    def on_open(self):
         """
         """
         pass
 
-    def on_fail(self, reason, permanent):
+    def on_close(self, reason):
         """
         """
         pass
@@ -52,12 +52,17 @@ class Connection(object):
         """
         pass
 
-    def close(self, force_timeout=10):
+    def stop(self, force_timeout=10):
         """
         """
         pass
 
     def reconnect(self):
+        """
+        """
+        pass
+
+    def set_host(self, host_port):
         """
         """
         pass
@@ -87,6 +92,11 @@ class Connection(object):
         """
         pass
 
+
+    ##===========================================================================
+    ## Transport extension interface
+    ##===========================================================================
+
     def xport_read_ready(self):
         """
         """
@@ -106,3 +116,14 @@ class Connection(object):
         """
         """
         pass
+
+    def xport_timeout(self):
+        """
+        """
+        pass
+
+
+    ##===========================================================================
+    ## SASL extension interface
+    ##===========================================================================
+
