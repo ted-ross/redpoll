@@ -21,15 +21,15 @@ Python Examples
 <table border="1">
   <tr><th>Example File</th><th>Description</th></tr>
   <tr><td>async_send_reliable.py</td><td>An async sender that requires acknowledgements</td></tr>
-  <tr><td>async_recv_exactly_once.py</td><td>An async receiver that uses eaxctly-once mode</td></tr>
+  <tr><td>async_recv_exactly_once.py</td><td>An async receiver that uses exactly-once mode</td></tr>
   <tr><td>async_server_reliable.py</td><td>An async server that delays request acceptance until the response is accepted</td></tr>
 </table>
 </center>
 
 # Needed Additions
 
- - TCP Server, using an FD transport extension (internal thread via connection.start())
  - Running with an external select loop (external thread pool)
  - Doing transactional work
  - Connecting with SSL and SASL
  - Link recovery
+ - TCP Server, using an FD transport extension (internal thread via connection.start())
