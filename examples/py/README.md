@@ -6,12 +6,12 @@ Python Examples
 <center>
 <table>
   <tr><th>Example File</th><th>Description</th></tr>
-  || sync_send_presettled.py || Simplest possible message sender ||
-  || sync_recv_autoaccepted.py || Simplest possible message receiver ||
-  || sync_send_reliable.py || Sending messages that need to be acknowledged ||
-  || sync_recv_exactly_once.py || Receiver of messages using the exactly-once mode ||
-  || sync_client_best_effort.py || The client-side of a simple best-effort request-response application ||
-  || sync_server_best_effort.py || The server-size of a simple best-effort request-response application ||
+  <tr><td>sync_send_presettled.py</td><td>Simplest possible message sender</td></tr>
+  <tr><td>sync_recv_autoaccepted.py</td><td>Simplest possible message receiver</td></tr>
+  <tr><td>sync_send_reliable.py</td><td>Sending messages that need to be acknowledged</td></tr>
+  <tr><td>sync_recv_exactly_once.py</td><td>Receiver of messages using the exactly-once mode</td></tr>
+  <tr><td>sync_client_best_effort.py</td><td>The client-side of a simple best-effort request-response application</td></tr>
+  <tr><td>sync_server_best_effort.py</td><td>The server-size of a simple best-effort request-response application</td></tr>
 </table>
 </center>
 
