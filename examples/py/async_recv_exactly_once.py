@@ -17,7 +17,7 @@
 # under the License.
 #
 
-from qpid.messaging import Connection, Receiver, RECEIVER_EXACTLY_ONCE, ACCEPT
+from qpid.messaging import Connection, Receiver, RECEIVER_EXACTLY_ONCE
 from time import sleep
 
 HOST  = "localhost:5672"
@@ -30,7 +30,7 @@ class Example(object):
 
     def on_message(self, link, msg):
         print msg.body
-        return ACCEPT
+        link.accept(msg)
 
 ##
 ## Create a connection to the host using default settings
@@ -47,7 +47,7 @@ conn.start()
 app = Example(conn)
 
 ##
-## While app asynchronously receives and accpets messages, the main application
+## While app asynchronously receives and accepts messages, the main application
 ## can proceed with other work.
 ##
 try:
