@@ -17,42 +17,47 @@
 # under the License.
 #
 
-from qpid.messaging import Connection, Receiver, RECEIVER_EXACTLY_ONCE
+from qpid.messaging import Connection, Receiver, RECEIVER_EXACTLY_ONCE, ACCEPT
+from time import sleep
 
-HOST = "localhost:5672"
-DEST = "destination"
+HOST  = "localhost:5672"
+DEST  = "destination"
+
+class Example(object):
+    def __init__(self, conn):
+        self.conn = conn
+        self.link = Receiver(self.conn, DEST, handler=self, delivery_mode=RECEIVER_EXACTLY_ONCE)
+
+    def on_message(self, link, msg):
+        print msg.body
+        return ACCEPT
 
 ##
-## Create and open a connection to the host using default settings
+## Create a connection to the host using default settings
 ## (ANONYMOUS authentication, etc.).
 ##
 conn = Connection(HOST)
+
+##
+## Start the connection.  This causes a thread to be created by the library
+## to handle messaging operations and to invoke callbacks.
+##
 conn.start()
 
-##
-## Create a receiver-link from the destination source on the connected container.
-## A delivery mode of exactly-once is selected meaning that this receiver will
-## use the 3-ack protocol and message de-duplication to deliver each message only
-## once.
-##
-link = Receiver(conn, DEST, delivery_mode=RECEIVER_EXACTLY_ONCE)
+app = Example(conn)
 
 ##
-## Receive a message, blocking until the message arrives.
+## While app asynchronously receives and accpets messages, the main application
+## can proceed with other work.
 ##
-msg = link.recv()
-print msg.body
-
-##
-## Accept the message.  This causes the accept disposition to be sent, unsettled,
-## back to the sender.
-##
-link.accept(msg)
+try:
+    while True:
+        sleep(1.0)
+except KeyboardInterrupt:
+    pass
 
 ##
 ## Close the connection and everything associated with it.
-## This call will block until the 3-ack exchange is completed.  This call will not block
-## longer than the default force_timeout.
 ##
 conn.close()
 
