@@ -4,7 +4,7 @@ Python Examples
 # Synchronous Examples
 
 <center>
-<table>
+<table border="1">
   <tr><th>Example File</th><th>Description</th></tr>
   <tr><td>sync_send_presettled.py</td><td>Simplest possible message sender</td></tr>
   <tr><td>sync_recv_autoaccepted.py</td><td>Simplest possible message receiver</td></tr>
