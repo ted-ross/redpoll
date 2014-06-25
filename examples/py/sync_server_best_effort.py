@@ -65,5 +65,5 @@ except KeyboardInterrupt:
 ##
 ## Close the connection and everything associated with it.
 ##
-conn.close()
+conn.stop()
 

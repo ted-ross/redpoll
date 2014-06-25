@@ -54,5 +54,5 @@ link.accept(msg)
 ## This call will block until the 3-ack exchange is completed.  This call will not block
 ## longer than the default force_timeout.
 ##
-conn.close()
+conn.stop()
 
