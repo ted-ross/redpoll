@@ -20,9 +20,9 @@
 from qpid.messaging import Connection, Sender, Message, SENDER_REQUIRE_ACK
 from threading import Condition
 
-HOST = "localhost:5672"
-DEST = "destination"
-
+HOST  = "localhost:5672"
+DEST  = "destination"
+COUNT = 100
 
 class Example(object):
     def __init__(self, conn):
@@ -49,8 +49,8 @@ class Example(object):
         self._check_done()
 
     def run(self):
-        self.outstanding = 100
-        for i in range(100):
+        self.outstanding = COUNT
+        for i in range(COUNT):
             msg = Message({'sequence':i})
             self.link.send(msg, handler=self)
 
@@ -67,6 +67,11 @@ class Example(object):
 ## (ANONYMOUS authentication, etc.).
 ##
 conn = Connection(HOST)
+
+##
+## Start the connection.  This causes a thread to be created by the library
+## to handle messaging operations and to invoke callbacks.
+##
 conn.start()
 
 app = Example(conn)
