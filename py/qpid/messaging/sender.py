@@ -51,7 +51,7 @@ class Sender(object):
     """
     """
 
-    def __init__(self, conn_or_sess, target, source=None, delivery_mode=SENDER_PRESETTLED, link_recovery=False, compression=None):
+    def __init__(self, conn_or_sess, target=None, source=None, delivery_mode=SENDER_PRESETTLED, link_recovery=False, compression=None):
         """
         """
         pass

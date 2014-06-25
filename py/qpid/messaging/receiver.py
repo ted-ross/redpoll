@@ -17,12 +17,16 @@
 # under the License.
 #
 
+class DynamicSource(object):
+    """
+    """
+
 RECEIVER_AUTO_ACCEPT   = 1
 RECEIVER_AT_LEAST_ONCE = 2
 RECEIVER_EXACTLY_ONCE  = 3
 DIST_MOVE              = 1  # consume
 DIST_COPY              = 2  # browse
-
+DYNAMIC                = DynamicSource()
 
 class ReceiverHandler(object):
     """
@@ -42,7 +46,6 @@ class ReceiverHandler(object):
         """
         """
         pass
-
 
 class Receiver(object):
     """
@@ -79,6 +82,11 @@ class Receiver(object):
         pass
 
     def add_credit(self, credits=1):
+        """
+        """
+        pass
+
+    def get_source(self):
         """
         """
         pass
