@@ -17,7 +17,7 @@
 # under the License.
 #
 
-from qpid.messaging import Connection, Sender, Message
+from redpoll import Connection, Sender, Message
 
 HOST = "localhost:5672"
 DEST = "destination"

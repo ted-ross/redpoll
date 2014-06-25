@@ -17,7 +17,7 @@
 # under the License.
 #
 
-from qpid.messaging import Connection, Receiver, RECEIVER_EXACTLY_ONCE
+from redpoll import Connection, Receiver, RECEIVER_EXACTLY_ONCE
 from time import sleep
 
 HOST  = "localhost:5672"
