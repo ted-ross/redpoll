@@ -11,11 +11,20 @@ Python Examples
   <tr><td>sync_send_reliable.py</td><td>Sending messages that need to be acknowledged</td></tr>
   <tr><td>sync_recv_exactly_once.py</td><td>Receiver of messages using the exactly-once mode</td></tr>
   <tr><td>sync_client_best_effort.py</td><td>The client-side of a simple best-effort request-response application</td></tr>
-  <tr><td>sync_server_best_effort.py</td><td>The server-size of a simple best-effort request-response application</td></tr>
+  <tr><td>sync_server_best_effort.py</td><td>The server-side of a simple best-effort request-response application</td></tr>
 </table>
 </center>
 
 # Asynchronous Examples
+
+<center>
+<table border="1">
+  <tr><th>Example File</th><th>Description</th></tr>
+  <tr><td>async_send_reliable.py</td><td>An async sender that requires acknowledgements</td></tr>
+  <tr><td>async_recv_exactly_once.py</td><td>An async receiver that uses eaxctly-once mode</td></tr>
+  <tr><td>async_server_reliable.py</td><td>An async server that delays request acceptance until the response is accepted</td></tr>
+</table>
+</center>
 
 # Needed Additions
 
