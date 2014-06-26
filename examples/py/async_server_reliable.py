@@ -56,7 +56,7 @@ class Server(object):
         response = Message(msg.body)
         response.addr = msg.reply_to
         req = Request(msg, response, self)
-        self.response_link.send(msg, handler=req)
+        self.response_link.send(response, handler=req)
         ##
         ## Note that this handler does not accept the message.  This is deferred
         ## until after the response is completed.

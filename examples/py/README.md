@@ -12,6 +12,8 @@ Python Examples
   <tr><td>sync_recv_exactly_once.py</td><td>Receiver of messages using the exactly-once mode</td></tr>
   <tr><td>sync_client_best_effort.py</td><td>The client-side of a simple best-effort request-response application</td></tr>
   <tr><td>sync_server_best_effort.py</td><td>The server-side of a simple best-effort request-response application</td></tr>
+  <tr><td>sync_send_transactional.py</td><td>A transactional sender</td></tr>
+  <tr><td>sync_recv_transactional.py</td><td>A transactional receiver</td></tr>
 </table>
 </center>
 
@@ -28,8 +30,7 @@ Python Examples
 
 # Needed Additions
 
- - Running with an external select loop (external thread pool)
- - Doing transactional work
  - Connecting with SSL and SASL
+ - Running with an external select loop (external thread pool)
  - Link recovery
  - TCP Server, using an FD transport extension (internal thread via connection.start())
