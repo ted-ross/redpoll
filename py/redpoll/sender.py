@@ -22,26 +22,25 @@ SENDER_PRESETTLED  = 1
 SENDER_REQUIRE_ACK = 2
 
 
+class SenderHandler(object):
+    """
+    """
+
+    def on_clear_to_send(self, sender, message_count):
+        """
+        Credit is available on the sender link to send 'message_count' messages.
+        This event will only be called if there is a non-zero offer in effect.
+        Calling sender.drained() will stop this event from firing (even if the
+        peer node doesn't recind its credit).
+        """
+        pass
+
+
 class SendHandler(object):
     """
     """
 
-    def on_accept(self, receiver, msg):
-        """
-        """
-        pass
-
-    def on_reject(self, receiver, msg, reason):
-        """
-        """
-        pass
-
-    def on_release(self, receiver, msg):
-        """
-        """
-        pass
-
-    def on_settle(self, receiver, msg):
+    def on_settle(self, sender, msg, disposition, reason):
         """
         """
         pass
@@ -62,6 +61,11 @@ class Sender(object):
         pass
 
     def send(self, msg, handler=None, transaction=None, timeout=None):
+        """
+        """
+        pass
+
+    def offer(self, message_count):
         """
         """
         pass

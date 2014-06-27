@@ -18,67 +18,40 @@
 #
 
 from redpoll import Connection, Sender, Message, SENDER_REQUIRE_ACK
-from threading import Condition
 
 HOST  = "localhost:5672"
 DEST  = "destination"
 COUNT = 100
 
 class Example(object):
-    def __init__(self, conn):
-        self.conn         = conn
-        self.link         = Sender(self.conn, DEST, delivery_mode=SENDER_REQUIRE_ACK)
-        self.cv           = Condition()
-        self.accept_count = 0
-        self.reject_count = 0
-        self.outstanding  = 0
+    def __init__(self, host):
+        self.conn          = Connection(host)
+        self.link          = Sender(self.conn, DEST, delivery_mode=SENDER_REQUIRE_ACK)
+        self.send_count    = 0
+        self.settled_count = 0
 
-    def _check_done(self):
-        self.cv.acquire()
-        self.outstanding -= 1
-        if self.outstanding == 0:
-            self.cv.notify()
-        self.cv.release()
-
-    def on_accept(self, link, msg):
-        self.accept_count += 1
-        self._check_done()
-
-    def on_reject(self, link, msg):
-        self.reject_count += 1
-        self._check_done()
-
-    def run(self):
-        self.outstanding = COUNT
-        for i in range(COUNT):
+    def on_clear_to_send(self, sender, msg, count):
+        for i in range(count):
+            if self.send_count == COUNT:
+                self.link.drained()
+                break
             msg = Message({'sequence':i})
             self.link.send(msg, handler=self)
+            self.send_count += 1
 
-        self.cv.acquire()
-        while self.outstanding > 0:
-            self.cv.wait()
-        self.cv.release()
+    def on_settle(self, link, msg, disposition, reason):
+        """
+        Stop the application once all of the messages are sent and acknowledged,
+        """
+        self.settled_count += 1
+        if self.settled_count == COUNT:
+            self.conn.stop()
 
-        print "Complete: %d accepted, %d rejected" % (self.accept_count, self.reject_count)
+    def run(self):
+        self.link.offer(COUNT)
+        self.conn.run()
 
 
-##
-## Create a connection to the host using default settings
-## (ANONYMOUS authentication, etc.).
-##
-conn = Connection(HOST)
-
-##
-## Start the connection.  This causes a thread to be created by the library
-## to handle messaging operations and to invoke callbacks.
-##
-conn.start()
-
-app = Example(conn)
+app = Example(HOST)
 app.run()
-
-##
-## Close the connection and everything associated with it.
-##
-conn.stop()
 
