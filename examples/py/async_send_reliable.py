@@ -26,17 +26,17 @@ COUNT = 100
 class Example(object):
     def __init__(self, host):
         self.conn          = Connection(host)
-        self.link          = Sender(self.conn, DEST, delivery_mode=SENDER_REQUIRE_ACK)
+        self.link          = Sender(self.conn, DEST, handler=self, delivery_mode=SENDER_REQUIRE_ACK)
         self.send_count    = 0
         self.settled_count = 0
 
-    def on_clear_to_send(self, sender, msg, count):
+    def on_clear_to_send(self, sender, count):
         for i in range(count):
             if self.send_count == COUNT:
-                self.link.drained()
+                sender.drained()
                 break
             msg = Message({'sequence':i})
-            self.link.send(msg, handler=self)
+            sender.send(msg, handler=self)
             self.send_count += 1
 
     def on_settle(self, link, msg, disposition, reason):
