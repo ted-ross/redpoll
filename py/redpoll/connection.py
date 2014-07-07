@@ -22,12 +22,31 @@ class ConnectionHandler(object):
     """
     """
 
-    def on_open(self):
+    def on_start(self, conn):
         """
         """
         pass
 
-    def on_close(self, reason):
+    def on_stop(self, conn):
+        """
+        """
+        pass
+
+    def on_connected(self, conn):
+        """
+        """
+        pass
+
+    def on_opened(self, conn):
+        """
+        """
+        pass
+
+    def on_closed(self, conn):
+        """
+        """
+
+    def on_disconnected(self, conn, reason):
         """
         """
         pass
@@ -37,7 +56,7 @@ class Connection(object):
     """
     """
 
-    def __init__(self, hostport_or_transport, handler=None):
+    def __init__(self, addr_or_transport, handler=None):
         """
         """
         pass
@@ -62,10 +81,15 @@ class Connection(object):
         """
         pass
 
-    def set_host(self, host_port):
+    def set_addr(self, addr):
         """
         """
         pass
+
+    def get_addr(self):
+        """
+        """
+        return None
 
     def set_sasl(self, mechanisms):
         """
@@ -92,18 +116,39 @@ class Connection(object):
         """
         pass
 
+    def get_remote_container_info(self):
+        """
+        """
+        pass
+
+    def get_sasl_info(self):
+        """
+        """
+        pass
+
+    def get_ssl_info(self):
+        """
+        """
+        pass
+
 
     ##===========================================================================
     ## Transport extension interface
     ##===========================================================================
 
-    def xport_read_ready(self):
+    def xport_pre_poll(self):
         """
-        """
-        pass
+        Invoked by the transport prior to blocking in poll/select.
+        The connection may use this call to do internal processing.
 
-    def xport_write_ready(self):
-        """
+        The connection returns a three-tuple:  (read_ready, write_ready, timeout)
+
+        read_ready and write_ready are boolean values indicating whether the connection
+        wishes to read and write respectively.
+
+        timeout is a duration in milliseconds for when the connection wishes to be
+        pre_polled again.  The poll loop should use the minimum of the timeouts for
+        all connections it is managing.
         """
         pass
 
