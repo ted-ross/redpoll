@@ -63,31 +63,52 @@ class Connection(object):
 
     def start(self):
         """
+        Start the operation of the connection in its own thread.  Upon invocation,
+        a thread will be spawned which will immediately attempt to establish the
+        connection.
         """
         pass
 
     def run(self):
         """
+        Run does the same thing as start, but instead of creating a new thread,
+        it uses the current thread to operate the connection.  This function will
+        not return until the connection has been successfully stopped.
         """
         pass
 
     def stop(self, force_timeout=10):
         """
+        Stop the operation of the connection.  The connection is closed and the
+        thread operating the connection is ended.  If 'run' was called, it will
+        return after the stop is successful.
+        """
+        pass
+
+    def wait(self):
+        """
+        Block until the connection has been stopped.
         """
         pass
 
     def reconnect(self):
         """
+        If the transport connection is down, this function instructs the connection
+        to attempt to re-establish the transport.  This will sometimes be called after
+        using 'set_addr' to provide an alternate address.
         """
         pass
 
     def set_addr(self, addr):
         """
+        Overwrite the address for this connection.  At the next 'reconnect', this new
+        address will be used.
         """
         pass
 
     def get_addr(self):
         """
+        Get the current address for the connection.
         """
         return None
 
@@ -136,7 +157,7 @@ class Connection(object):
     ## Transport extension interface
     ##===========================================================================
 
-    def xport_pre_poll(self):
+    def xport_process(self):
         """
         Invoked by the transport prior to blocking in poll/select.
         The connection may use this call to do internal processing.
@@ -147,7 +168,7 @@ class Connection(object):
         wishes to read and write respectively.
 
         timeout is a duration in milliseconds for when the connection wishes to be
-        pre_polled again.  The poll loop should use the minimum of the timeouts for
+        processed again.  The poll loop should use the minimum of the timeouts for
         all connections it is managing.
         """
         pass

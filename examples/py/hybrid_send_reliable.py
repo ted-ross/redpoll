@@ -27,17 +27,7 @@ class Example(object):
     def __init__(self, host):
         self.conn          = Connection(host)
         self.link          = Sender(self.conn, DEST, handler=self, delivery_mode=SENDER_REQUIRE_ACK)
-        self.send_count    = 0
         self.settled_count = 0
-
-    def on_clear_to_send(self, sender, count):
-        for i in range(count):
-            if self.send_count == COUNT:
-                sender.drained()
-                break
-            msg = Message({'sequence':self.send_count})
-            sender.send(msg, handler=self)
-            self.send_count += 1
 
     def on_settle(self, link, msg, disposition, reason):
         """
@@ -48,9 +38,11 @@ class Example(object):
             self.conn.stop()
 
     def run(self):
-        self.link.offer(COUNT)
-        self.conn.run()
-
+        self.conn.start()
+        for i in range(COUNT):
+            msg= Message({'sequence':i})
+            sender.send(msg, handler=self)
+        self.conn.wait()
 
 app = Example(HOST)
 app.run()
