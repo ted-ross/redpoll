@@ -10,6 +10,18 @@ Like the sender, a receiver is created in the context of a connection and
 contains an address to identify the receiver's source (in this case, the same
 queue on the same broker).
 
+If the receiving application expects to receive more than one message, or a
+continuous stream of incoming messages, it would be wise to set a prefetch
+value greater than zero.  Prefetch is the number of message credits that the
+receiver will issue initially and maintain.  It is the number of messages that
+can be sent by the sender before the receiving application receives and
+accepts the messages.
+
+Setting a prefetch greater than zero will greatly improve the rate at which
+messages will flow into the application.
+
+    receiver = Receiver(connection, "my-queue", prefetch=10)
+
 To receive a message through the receiver, we use the recv() function:
 
     message = receiver.recv()
