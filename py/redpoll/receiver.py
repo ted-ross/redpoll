@@ -51,7 +51,7 @@ class Receiver(object):
     """
     """
 
-    def __init__(self, conn_or_sess, source, target=None, handler=None, delivery_mode=RECEIVER_AUTO_ACCEPT, link_recovery=False, initial_credit=10, selector=None, dist_mode=DIST_MOVE):
+    def __init__(self, conn_or_sess, source, target=None, handler=None, delivery_mode=RECEIVER_AUTO_ACCEPT, link_recovery=False, prefetch=0, selector=None, dist_mode=DIST_MOVE):
         """
         """
         pass
@@ -61,7 +61,7 @@ class Receiver(object):
         """
         pass
 
-    def recv(self):
+    def recv(self, timeout=None):
         """
         """
         pass

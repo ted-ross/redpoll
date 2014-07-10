@@ -62,6 +62,22 @@ class Sender(object):
 
     def send(self, msg, handler=None, transaction=None, timeout=None):
         """
+
+                               PRESETTLED                       REQUIRE_ACK
+                   +-------------------------------+---------------------------------+
+                   | block on flow-control         | block on flow-control           |
+                   |                               | block until message is settled  |
+        no handler |                               |                                 |
+                   | return None                   | return Disposition of message   |
+                   |                               |                                 |
+                   +-------------------------------+---------------------------------+
+                   | block on flow-control         | block on flow-control           |
+                   |                               | never block in on_clear_to_send |
+        handler    | handler not invoked           | handler.on_settle invoked       |
+                   | return None                   | return None                     |
+                   |                               |                                 |
+                   +-------------------------------+---------------------------------+
+        
         """
         pass
 
