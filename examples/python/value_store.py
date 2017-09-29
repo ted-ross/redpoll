@@ -20,7 +20,7 @@
 
 from proton.handlers import MessagingHandler
 from proton.reactor import Container
-from redpoll.request_response import RequestServer, Request
+from redpoll.request_response import RequestServer
 
 class ValueStore(MessagingHandler):
     def __init__(self, bus_address, service_address):
