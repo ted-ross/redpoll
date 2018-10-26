@@ -53,12 +53,17 @@ DEQ_DECLARE(lock_t, lock_list_t);
 
 
 typedef struct app_data_t {
-    const char    *host;
-    const char    *port;
-    const char    *container_id;
-    const char    *prefix;
-    pn_proactor_t *proactor;
-    lock_list_t    locks;
+    const char      *host;
+    const char      *port;
+    const char      *container_id;
+    const char      *prefix;
+    pn_proactor_t   *proactor;
+    pn_connection_t *conn;
+    pn_session_t    *sess;
+    pn_link_t       *sender;
+    pn_link_t       *receiver;
+    const char      *reply_to;
+    lock_list_t      locks;
 } app_data_t;
 
 
@@ -156,19 +161,55 @@ static pn_bytes_t rpls_bytes(const char *value)
 }
 
 
-static void rpls_set_connection_properties(app_data_t* app, pn_data_t *properties)
+static void rpls_send_link_route_create(app_data_t* app)
 {
-    if (pn_data_type(properties) == PN_INVALID) {
-        pn_data_put_map(properties);  // Properties map
-        pn_data_enter(properties);
-        pn_data_put_symbol(properties, rpls_bytes("qd.link-route-patterns"));
-        pn_data_put_list(properties);  // List of patterns
-        pn_data_enter(properties);
-        pn_data_put_string(properties, rpls_bytes(app->prefix));
-        pn_data_put_symbol(properties, rpls_bytes("out"));
-        pn_data_exit(properties);  // List of patterns
-        pn_data_exit(properties);  // Properties map
-    }
+    pn_message_t *msg  = pn_message();
+    pn_data_t    *body = pn_message_body(msg);
+    pn_data_t    *ap   = pn_message_properties(msg);
+
+    pn_message_set_reply_to(msg, app->reply_to);
+
+    //
+    // Set up the application properties map
+    //
+    pn_data_put_map(ap);
+    pn_data_enter(ap);
+
+    pn_data_put_symbol(ap, rpls_bytes("operation"));
+    pn_data_put_string(ap, rpls_bytes("CREATE"));
+
+    pn_data_put_symbol(ap, rpls_bytes("type"));
+    pn_data_put_string(ap, rpls_bytes("org.apache.qpid.dispatch.router.connection.attachSubscription"));
+
+    pn_data_put_symbol(ap, rpls_bytes("name"));
+    pn_data_put_string(ap, rpls_bytes("mutex.#"));
+
+    pn_data_exit(ap);
+
+    //
+    // Set up the body map
+    //
+    pn_data_put_map(body);
+    pn_data_enter(body);
+
+    pn_data_put_symbol(body, rpls_bytes("pattern"));
+    pn_data_put_string(body, rpls_bytes("mutex.#"));
+
+    pn_data_put_symbol(body, rpls_bytes("direction"));
+    pn_data_put_string(body, rpls_bytes("out"));
+
+    pn_data_exit(body);
+
+    //
+    // Send the request
+    //
+    char           bytes[1000];
+    size_t         size = 1000;
+    pn_delivery_t *dlv  = pn_delivery(app->sender, pn_dtag("00", 2));
+
+    pn_message_encode(msg, bytes, &size);
+    ssize_t result = pn_link_send(app->sender, bytes, size);
+    pn_link_advance(app->sender);
  }
 
 
@@ -178,12 +219,21 @@ static bool handle(app_data_t* app, pn_event_t* event)
     switch (pn_event_type(event)) {
 
     case PN_CONNECTION_INIT: {
-        pn_connection_t *c = pn_event_connection(event);
-        pn_connection_set_container(c, app->container_id);
-        rpls_set_connection_properties(app, pn_connection_properties(c));
-        pn_connection_open(c);
+        app->conn = pn_event_connection(event);
+        pn_connection_set_container(app->conn, app->container_id);
+        pn_connection_set_hostname(app->conn, app->host);
+        pn_connection_open(app->conn);
         break;
     }
+
+    case PN_CONNECTION_REMOTE_OPEN:
+        app->sess = pn_session(app->conn);
+        pn_session_open(app->sess);
+
+        app->receiver = pn_receiver(app->sess, "lock_service_receiver");
+        pn_terminus_set_dynamic(pn_link_source(app->receiver), true);
+        pn_link_open(app->receiver);
+        break;
 
     case PN_TRANSPORT_CLOSED:
         break;
@@ -205,6 +255,28 @@ static bool handle(app_data_t* app, pn_event_t* event)
 
     case PN_LINK_REMOTE_OPEN: {
         pn_link_t *link = pn_event_link(event);
+
+        //
+        // If the link is our management sender, send the connection link-route setup
+        //
+        if (link == app->sender) {
+            rpls_send_link_route_create(app);
+            break;
+        }
+
+        //
+        // If the link is our dynamic receiver, get the address and set up the management sender
+        //
+        if (link == app->receiver) {
+            app->reply_to = pn_terminus_get_address(pn_link_remote_source(link));
+
+            app->sender = pn_sender(app->sess, "lock_service_sender");
+            pn_terminus_set_address(pn_link_target(app->sender), "$management");
+            pn_link_open(app->sender);
+
+            pn_link_flow(app->receiver, 10);
+            break;
+        }
 
         //
         // If the link is not a sender, close it.
@@ -283,7 +355,7 @@ int main(int argc, char **argv)
 
     int i = 0;
     app->container_id = argv[i++];   /* Should be unique */
-    app->host         = (argc > i) ? argv[i++] : "";
+    app->host         = (argc > i) ? argv[i++] : "127.0.0.1";
     app->port         = (argc > i) ? argv[i++] : "amqp";
     app->prefix       = (argc > i) ? argv[i++] : "mutex.#";
 
